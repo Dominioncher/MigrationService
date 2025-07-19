@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "MigrationService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Environment": "Development"
+      },
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "Environment": "Development"
+      }
+    }
+  }
+}
