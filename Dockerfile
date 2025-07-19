@@ -5,14 +5,15 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 
+
 # Этот этап используется для сборки проекта службы
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MigrationService/MigrationService.csproj", "MigrationService/"]
-RUN dotnet restore "./MigrationService/MigrationService.csproj"
+COPY ["MigrationService.csproj", "."]
+RUN dotnet restore "./MigrationService.csproj"
 COPY . .
-WORKDIR "/src/MigrationService"
+WORKDIR "/src/."
 RUN dotnet build "./MigrationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
