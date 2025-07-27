@@ -1,0 +1,28 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe
+    environment:
+      - ORACLE_PASSWORD=Oracle_123
+      - APP_USER=test
+      - APP_USER_PASSWORD=test
+    ports:
+      - 1521:1521
+      - 58768:58768
+      - 58769:58769
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - oracle-backup:/opt/oracle/backup
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+volumes:
+  oracle-data:
+  oracle-backup:
+  
+networks:
+  default:
+    name: migrations

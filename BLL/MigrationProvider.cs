@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MigrationService.DB.Adapters;
 using MigrationService.Exceptions;
+using System.IO;
 
 namespace MigrationService.BLL
 {
@@ -56,10 +57,9 @@ namespace MigrationService.BLL
             // Оставляем только не зафиксированные миграции
             var head = _dbAdapter.GetMigrationsHead();
             var migrations = GetMigrationsFromDirectory();
-            var index = migrations.FindIndex(x =>
+            var index = migrations.FindIndex(path =>
             {
-                var info = new DirectoryInfo(x);
-                return $"{info.Parent.Name}_{info.Name}" == head;
+                return path.Substring(_options.MigrationsPath.Length + 1) == head;
             });
             migrations.RemoveRange(0, index + 1);
 
@@ -103,8 +103,7 @@ namespace MigrationService.BLL
         private void ExecuteMigration(string path)
         {
             var sql = File.ReadAllText(path);
-            var info = new DirectoryInfo(path);
-            var migrationName = $"{info.Parent.Name}_{info.Name}";
+            var migrationName = path.Substring(_options.MigrationsPath.Length + 1);
 
             try
             {
